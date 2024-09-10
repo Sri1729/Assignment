@@ -45,3 +45,23 @@ export const logoutUser = async () => {
     });
   } catch (e) {}
 };
+
+export const changeUserType = async () => {
+  try {
+    const details = await fetch(`${END_POINT}/change_user_type`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (details?.status !== 401) {
+      return details?.json();
+    } else {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+};

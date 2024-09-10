@@ -1,7 +1,7 @@
 import { getUserProfile } from "@/services";
 import React from "react";
 import { cookies } from "next/headers";
-import { Header } from "@/components";
+import { ChangeUserType, Header } from "@/components";
 
 const Type1Home = async () => {
   const data = await getData();
@@ -21,6 +21,9 @@ const Type1Home = async () => {
             <p className="font-bold">
               DOB: <span className="text-blue-600">{data.DOB}</span>
             </p>
+          </div>
+          <div className="items-center mt-10">
+            <ChangeUserType />
           </div>
         </div>
       </div>
