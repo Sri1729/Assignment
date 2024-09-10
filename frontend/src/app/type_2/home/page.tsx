@@ -1,21 +1,14 @@
+import { ChangeUserType, Header } from "@/components";
 import { getUserProfile } from "@/services";
-import React from "react";
 import { cookies } from "next/headers";
-import { Header } from "@/components";
-import { redirect } from "next/navigation";
+import React from "react";
 
-const Type1Home = async () => {
+const Type2Home = async () => {
   const data = await getData();
 
-  if (!data) {
-    redirect("/");
-  }
-  if (data?.user_type === 2) {
-    redirect("/type_2_home");
-  }
   return (
     <>
-      <Header title="Type 1 Home" />
+      <Header title="Type 2 Home" />
       <div className="flex justify-center items-center h-screen">
         <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
           <div className="text-center">
@@ -29,6 +22,9 @@ const Type1Home = async () => {
               DOB: <span className="text-blue-600">{data.DOB}</span>
             </p>
           </div>
+          <div className="items-center mt-10">
+            <ChangeUserType />
+          </div>
         </div>
       </div>
     </>
@@ -40,4 +36,4 @@ async function getData() {
   return res;
 }
 
-export default Type1Home;
+export default Type2Home;

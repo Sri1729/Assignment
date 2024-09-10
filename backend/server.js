@@ -6,6 +6,21 @@ const cors = require("cors");
 
 const app_secret = "Testing";
 
+const cookie_config_obj = {
+  // can only be accessed by server requests
+  httpOnly: true,
+  // path = where the cookie is valid
+  path: "/",
+  // domain = what domain the cookie is valid on
+  domain: "localhost",
+  // secure = only send cookie over https
+  secure: false,
+  // sameSite = only send cookie if the request is coming from the same origin
+  sameSite: "lax", // "strict" | "lax" | "none" (secure must be true)
+  // maxAge = how long the cookie is valid for in milliseconds
+  maxAge: 3600000, // 1 hour
+};
+
 // app creation
 const app = express();
 
@@ -57,20 +72,7 @@ app.post("/auth", (req, res) => {
   const token = jwt.sign(user, app_secret, { expiresIn: "1h" });
 
   // cookie setting
-  res.cookie("auth-token", token, {
-    // can only be accessed by server requests
-    httpOnly: true,
-    // path = where the cookie is valid
-    path: "/",
-    // domain = what domain the cookie is valid on
-    domain: "localhost",
-    // secure = only send cookie over https
-    secure: false,
-    // sameSite = only send cookie if the request is coming from the same origin
-    sameSite: "lax", // "strict" | "lax" | "none" (secure must be true)
-    // maxAge = how long the cookie is valid for in milliseconds
-    maxAge: 3600000, // 1 hour
-  });
+  res.cookie("auth-token", token, cookie_config_obj);
 
   // Allow requests from any origin
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -112,6 +114,40 @@ app.get("/profile", verifyToken, (req, res) => {
     user_type: type,
     DOB: "24-08-1999",
   });
+});
+
+app.post("/change_user_type", verifyToken, (req, res) => {
+  const details = req.user;
+  let type;
+
+  if (details.user_type === "type_2") {
+    type = 1;
+  } else {
+    type = 2;
+  }
+
+  const token = jwt.sign(
+    { username: details.username, user_type: `type_${type}` },
+    app_secret,
+    { expiresIn: "1h" }
+  );
+
+  res.cookie("auth-token", token, cookie_config_obj);
+
+  // Allow requests from any origin
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+
+  // Allow specific HTTP methods
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+
+  // Allow specific headers to be sent in the request
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  // Allow credentials (e.g., cookies, authentication) to be included in requests
+  res.setHeader("Access-Control-Allow-Credentials", true);
+
+  // send json response
+  res.json({ token, user_type: `type_${type}` });
 });
 
 const PORT = 3001;
