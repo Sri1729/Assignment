@@ -44,10 +44,10 @@ export default function Home() {
     const response = await authenticateUser(email, password);
     setLoading(false);
     if (response?.user_type === "type_1") {
-      router.push("/type_1_home");
+      router.push("/type_1/home");
     }
     if (response?.user_type === "type_2") {
-      router.push("/type_2_home");
+      router.push("/type_2/home");
     }
   };
 

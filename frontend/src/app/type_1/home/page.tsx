@@ -2,17 +2,10 @@ import { getUserProfile } from "@/services";
 import React from "react";
 import { cookies } from "next/headers";
 import { Header } from "@/components";
-import { redirect } from "next/navigation";
 
 const Type1Home = async () => {
   const data = await getData();
 
-  if (!data) {
-    redirect("/");
-  }
-  if (data?.user_type === 2) {
-    redirect("/type_2_home");
-  }
   return (
     <>
       <Header title="Type 1 Home" />
